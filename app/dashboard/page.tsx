@@ -33,13 +33,11 @@ export default function DashboardPage() {
 
   return (
     <main className="pb-12">
-      {/* User Stats Section */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold mb-2">Welcome back, {currentUser.name}! 👋</h2>
         <p className="text-neutral-400 mb-6">Keep crushing it with check-ins</p>
         
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          {/* Stats Cards */}
           <div className="card p-6 text-center hover:border-brand transition">
             <p className="text-4xl font-bold text-brand mb-2">{checkInCount}</p>
             <p className="text-neutral-400">Total Check-ins</p>
@@ -55,7 +53,6 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* Recent Check-ins Section */}
       {recentCheckIns.length > 0 && (
         <section className="mb-12">
           <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
@@ -88,7 +85,6 @@ export default function DashboardPage() {
         </section>
       )}
 
-      {/* Your Favorites */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-semibold">Your Favorites</h3>
@@ -99,35 +95,6 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {favoriteVenues.map(v => <VenueCard key={v.id} v={v as any} />)}
         </div>
-      </section>
-    </main>
-  );
-}
-
-  return (
-    <main className="pb-12">
-      {/* User Stats Section */}
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-2">Welcome back, {currentUser.name}! 👋</h2>
-        <p className="text-neutral-400 mb-6">Here's what your friends are up to</p>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          {/* Stats Cards */}
-          <div className="card p-6 text-center">
-            <p className="text-4xl font-bold text-brand mb-2">12</p>
-            <p className="text-neutral-400">Venues Visited</p>
-          </div>
-          <div className="card p-6 text-center">
-            <p className="text-4xl font-bold text-pink-500 mb-2">8</p>
-            <p className="text-neutral-400">Friends Following</p>
-          </div>
-          <div className="card p-6 text-center">
-            <p className="text-4xl font-bold text-purple-500 mb-2">4</p>
-            <p className="text-neutral-400">Check-ins This Week</p>
-          </div>
-        </div>
-      </section>
-
       </section>
     </main>
   );
