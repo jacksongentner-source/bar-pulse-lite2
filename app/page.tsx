@@ -55,6 +55,12 @@ export default function HomePage() {
   // Get venue details for age checking and amenities
   const venueMap = new Map(allVenues.map(v => [v.id, v]));
 
+  // Trending venue IDs (first 8 from the data file)
+  const trendingIds = ['hannahs', 'tomgraineys', 'balcony', 'dirtylittleroddys', 'thieves', 'bittercreek', 'neurolux', 'amsterdam'];
+  
+  const trendingVenues = venues.filter((v: any) => trendingIds.includes(v.id));
+  const allOtherVenues = venues.filter((v: any) => !trendingIds.includes(v.id));
+
   const filteredVenues = venues.filter((venue: any) => {
     const matchesSearch = venue.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       venue.type.toLowerCase().includes(searchQuery.toLowerCase());
@@ -73,6 +79,10 @@ export default function HomePage() {
     
     return matchesSearch && matchesCategory && matchesAge && matchesAmenities;
   });
+
+  // Split filtered into trending and others
+  const filteredTrending = filteredVenues.filter((v: any) => trendingIds.includes(v.id));
+  const filteredOthers = filteredVenues.filter((v: any) => !trendingIds.includes(v.id));
 
   const ageOptions = [
     { value: '', label: 'Any Age' },
@@ -204,9 +214,33 @@ export default function HomePage() {
 
       {/* Venues Grid */}
       {filteredVenues.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredVenues.map(v => <VenueCard key={v.id} v={v as any} />)}
-        </div>
+        <>
+          {/* Trending Section */}
+          {filteredTrending.length > 0 && (
+            <div className="mb-12">
+              <div className="flex items-center gap-2 mb-6">
+                <span className="text-2xl">🔥</span>
+                <h2 className="text-2xl font-bold">Trending Now</h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {filteredTrending.map(v => <VenueCard key={v.id} v={v as any} />)}
+              </div>
+            </div>
+          )}
+
+          {/* All Venues Section */}
+          {filteredOthers.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <span className="text-2xl">📍</span>
+                <h2 className="text-2xl font-bold">All Venues</h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredOthers.map(v => <VenueCard key={v.id} v={v as any} />)}
+              </div>
+            </div>
+          )}
+        </>
       ) : (
         <div className="card p-12 text-center">
           <p className="text-2xl mb-2">🔎</p>
