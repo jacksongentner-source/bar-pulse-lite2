@@ -1,11 +1,46 @@
-import { notFound } from "next/navigation";
-import { computeAggregates, getVenue } from "@/lib/data";
+'use client';
+
+import { useEffect, useState } from 'react';
+import { computeAggregates, getVenue, Venue } from "@/lib/data";
 import { Stars } from "@/components/Stars";
 import { BusyTimesChart } from "@/components/BusyTimesChart";
+import { useParams } from 'next/navigation';
 
-export default function VenuePage({ params }: { params: { id: string } }) {
-  const venue = getVenue(params.id);
-  if (!venue) return notFound();
+export default function VenuePage() {
+  const params = useParams();
+  const [venue, setVenue] = useState<Venue | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (params?.id) {
+      const id = Array.isArray(params.id) ? params.id[0] : params.id;
+      const foundVenue = getVenue(id);
+      setVenue(foundVenue || null);
+      setLoading(false);
+    }
+  }, [params?.id]);
+
+  if (loading) {
+    return (
+      <main className="pb-12">
+        <div className="card p-12 text-center">
+          <p className="text-neutral-400">Loading...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (!venue) {
+    return (
+      <main className="pb-12">
+        <div className="card p-12 text-center">
+          <p className="text-2xl mb-2">🏚️</p>
+          <p className="text-neutral-400 mb-2">Venue not found</p>
+        </div>
+      </main>
+    );
+  }
+
   const agg = computeAggregates(venue.id);
 
   return (
