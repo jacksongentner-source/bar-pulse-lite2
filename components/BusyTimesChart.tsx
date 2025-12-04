@@ -19,6 +19,23 @@ export function BusyTimesChart({ venue }: { venue: Venue }) {
     return acc;
   }, {} as Record<string, typeof venue.busyTimes[0]>);
 
+  // Fill in missing days with default "dead" times
+  const fillMissingDays = () => {
+    days.forEach(day => {
+      if (!busyData[day]) {
+        busyData[day] = {
+          day,
+          startTime: '20:00',
+          endTime: '22:00',
+          crowdLevel: 'dead'
+        };
+      }
+    });
+    return busyData;
+  };
+  
+  const completeBusyData = fillMissingDays();
+
   const getCrowdColor = (level: string) => {
     switch (level) {
       case 'dead':
@@ -146,7 +163,7 @@ export function BusyTimesChart({ venue }: { venue: Venue }) {
             }}
           >
             {days.map((day) => {
-              const dayData = busyData[day];
+              const dayData = completeBusyData[day];
               if (!dayData) return null;
 
               const colors = getCrowdColor(dayData.crowdLevel);
