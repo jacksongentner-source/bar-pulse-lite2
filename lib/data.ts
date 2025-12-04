@@ -29,6 +29,7 @@ export type Venue = {
   lng?: number;
   minAge?: number;
   busyTimes?: BusyTime[];
+  amenities?: string[];
 };
 
 // Sample Boise data
@@ -42,6 +43,7 @@ export const venues: Venue[] = [
     lat: 43.6154, 
     lng: -116.2039,
     minAge: 21,
+    amenities: ["DJ", "Dance Floor", "Pool Tables", "Mechanical Bull"],
     busyTimes: [
       { day: "Monday", startTime: "22:00", endTime: "01:00", crowdLevel: "moderate" },
       { day: "Friday", startTime: "21:00", endTime: "02:00", crowdLevel: "packed" },
@@ -58,6 +60,7 @@ export const venues: Venue[] = [
     lat: 43.6165, 
     lng: -116.2030,
     minAge: 21,
+    amenities: ["DJ", "Dance Floor", "Rooftop"],
     busyTimes: [
       { day: "Wednesday", startTime: "22:00", endTime: "02:00", crowdLevel: "busy" },
       { day: "Thursday", startTime: "22:00", endTime: "02:00", crowdLevel: "busy" },
@@ -74,6 +77,7 @@ export const venues: Venue[] = [
     lat: 43.6140, 
     lng: -116.2035,
     minAge: 21,
+    amenities: ["Pool Tables", "Pull Tabs", "Jukebox"],
     busyTimes: [
       { day: "Monday", startTime: "17:00", endTime: "22:00", crowdLevel: "moderate" },
       { day: "Friday", startTime: "17:00", endTime: "01:00", crowdLevel: "busy" },
@@ -90,6 +94,7 @@ export const venues: Venue[] = [
     lat: 43.6155, 
     lng: -116.2045,
     minAge: 21,
+    amenities: ["Craft Cocktails", "Jukebox"],
     busyTimes: [
       { day: "Tuesday", startTime: "17:00", endTime: "22:00", crowdLevel: "slow" },
       { day: "Thursday", startTime: "17:00", endTime: "23:00", crowdLevel: "moderate" },
@@ -106,6 +111,7 @@ export const venues: Venue[] = [
     lat: 43.6170, 
     lng: -116.2015,
     minAge: 21,
+    amenities: ["Mechanical Bull", "DJ", "Dance Floor"],
     busyTimes: [
       { day: "Wednesday", startTime: "21:00", endTime: "02:00", crowdLevel: "busy" },
       { day: "Friday", startTime: "20:00", endTime: "02:00", crowdLevel: "packed" },
@@ -122,6 +128,7 @@ export const venues: Venue[] = [
     lat: 43.6142, 
     lng: -116.2028,
     minAge: 21,
+    amenities: ["Pool Tables", "Sports Screens", "Jukebox"],
     busyTimes: [
       { day: "Monday", startTime: "16:00", endTime: "20:00", crowdLevel: "dead" },
       { day: "Thursday", startTime: "16:00", endTime: "23:00", crowdLevel: "busy" },
@@ -138,6 +145,7 @@ export const venues: Venue[] = [
     lat: 43.6148, 
     lng: -116.2040,
     minAge: 21,
+    amenities: ["Pool Tables", "Sports Screens", "Drive Bar"],
     busyTimes: [
       { day: "Thursday", startTime: "20:00", endTime: "02:00", crowdLevel: "busy" },
       { day: "Friday", startTime: "19:00", endTime: "02:00", crowdLevel: "packed" },
@@ -154,6 +162,7 @@ export const venues: Venue[] = [
     lat: 43.6160, 
     lng: -116.2020,
     minAge: 25,
+    amenities: ["Craft Cocktails", "Pool Tables"],
     busyTimes: [
       { day: "Wednesday", startTime: "18:00", endTime: "23:00", crowdLevel: "moderate" },
       { day: "Thursday", startTime: "18:00", endTime: "02:00", crowdLevel: "busy" },
@@ -170,6 +179,7 @@ export const venues: Venue[] = [
     lat: 43.6158, 
     lng: -116.2032,
     minAge: 21,
+    amenities: ["DJ", "Dance Floor", "Live Music", "Multiple Rooms"],
     busyTimes: [
       { day: "Thursday", startTime: "21:00", endTime: "02:00", crowdLevel: "busy" },
       { day: "Friday", startTime: "20:00", endTime: "03:00", crowdLevel: "packed" },
@@ -186,6 +196,7 @@ export const venues: Venue[] = [
     lat: 43.6145, 
     lng: -116.2025,
     minAge: 21,
+    amenities: ["Pool Tables", "Sports Screens", "Jukebox"],
     busyTimes: [
       { day: "Monday", startTime: "16:00", endTime: "22:00", crowdLevel: "moderate" },
       { day: "Thursday", startTime: "16:00", endTime: "02:00", crowdLevel: "busy" },

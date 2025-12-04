@@ -9,6 +9,7 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('popular');
   const [minAge, setMinAge] = useState('');
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
   const venues = listVenues();
 
@@ -21,14 +22,37 @@ export default function HomePage() {
     { id: 'jazz', label: 'Live Music' },
   ];
 
-  const ageOptions = [
-    { value: '', label: 'Any Age' },
-    { value: '18', label: '18+' },
-    { value: '21', label: '21+' },
-    { value: '25', label: '25+' },
+  const amenities = [
+    { id: 'pool', label: '🎱 Pool Tables' },
+    { id: 'dj', label: '🎧 DJ' },
+    { id: 'dance', label: '💃 Dance Floor' },
+    { id: 'jukebox', label: '🎵 Jukebox' },
+    { id: 'mechanical', label: '🤠 Mechanical Bull' },
+    { id: 'drive', label: '🏎️ Drive Bar' },
+    { id: 'pulltabs', label: '🎰 Pull Tabs' },
+    { id: 'livemusic', label: '🎸 Live Music' },
   ];
 
-  // Get venue details for age checking
+  const amenityMap: Record<string, string> = {
+    'pool': 'Pool Tables',
+    'dj': 'DJ',
+    'dance': 'Dance Floor',
+    'jukebox': 'Jukebox',
+    'mechanical': 'Mechanical Bull',
+    'drive': 'Drive Bar',
+    'pulltabs': 'Pull Tabs',
+    'livemusic': 'Live Music',
+  };
+
+  const toggleAmenity = (amenityId: string) => {
+    if (selectedAmenities.includes(amenityId)) {
+      setSelectedAmenities(selectedAmenities.filter(a => a !== amenityId));
+    } else {
+      setSelectedAmenities([...selectedAmenities, amenityId]);
+    }
+  };
+
+  // Get venue details for age checking and amenities
   const venueMap = new Map(allVenues.map(v => [v.id, v]));
 
   const filteredVenues = venues.filter((venue: any) => {
@@ -41,8 +65,21 @@ export default function HomePage() {
     const venueDetails = venueMap.get(venue.id);
     const matchesAge = !minAge || (venueDetails?.minAge ? venueDetails.minAge <= parseInt(minAge) : true);
     
-    return matchesSearch && matchesCategory && matchesAge;
+    // Check amenities
+    const matchesAmenities = selectedAmenities.length === 0 || selectedAmenities.some(amenityId => {
+      const amenityName = amenityMap[amenityId];
+      return venueDetails?.amenities?.includes(amenityName);
+    });
+    
+    return matchesSearch && matchesCategory && matchesAge && matchesAmenities;
   });
+
+  const ageOptions = [
+    { value: '', label: 'Any Age' },
+    { value: '18', label: '18+' },
+    { value: '21', label: '21+' },
+    { value: '25', label: '25+' },
+  ];
 
   return (
     <main className="pb-12">
@@ -110,6 +147,26 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* Amenities Filter */}
+        <div>
+          <label className="block text-sm font-medium mb-3 text-neutral-300">Amenities</label>
+          <div className="flex flex-wrap gap-2">
+            {amenities.map((amenity) => (
+              <button
+                key={amenity.id}
+                onClick={() => toggleAmenity(amenity.id)}
+                className={`px-3 py-2 rounded-full font-medium transition text-sm ${
+                  selectedAmenities.includes(amenity.id)
+                    ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/50'
+                    : 'bg-neutral-900 text-neutral-300 border border-neutral-700 hover:border-purple-500'
+                }`}
+              >
+                {amenity.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Sort Options */}
         <div>
           <label className="block text-sm font-medium mb-2 text-neutral-300">Sort by</label>
@@ -131,11 +188,12 @@ export default function HomePage() {
         <h3 className="text-xl font-semibold">
           {filteredVenues.length} venue{filteredVenues.length !== 1 ? 's' : ''} found
         </h3>
-        {(searchQuery || minAge) && (
+        {(searchQuery || minAge || selectedAmenities.length > 0) && (
           <button
             onClick={() => {
               setSearchQuery('');
               setMinAge('');
+              setSelectedAmenities([]);
             }}
             className="text-sm text-brand hover:text-pink-400 transition"
           >

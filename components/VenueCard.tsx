@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from "next/link";
 import { Stars } from "./Stars";
 import { CheckInModal } from "./CheckInModal";
 
@@ -35,12 +34,12 @@ export function VenueCard({ v }: { v: Venue }) {
         onSuccess={handleCheckInSuccess}
       />
 
-      <div className={`card block transition group relative ${justCheckedIn ? 'ring-2 ring-brand shadow-lg shadow-brand/50' : 'hover:ring-1 hover:ring-brand'}`}>
+      <div className={`card block transition group relative cursor-pointer ${justCheckedIn ? 'ring-2 ring-brand shadow-lg shadow-brand/50' : 'hover:ring-1 hover:ring-brand'}`}>
         {justCheckedIn && (
           <div className="absolute inset-0 bg-gradient-to-r from-brand/20 to-pink-500/20 rounded-lg animate-pulse pointer-events-none" />
         )}
 
-        <Link href={`/venue/${v.id}`} className="block">
+        <div className="block" onClick={() => window.location.href = `/venue/${v.id}`}>
           <div className="flex items-start justify-between">
             <div>
               <div className="text-lg font-semibold group-hover:text-brand transition">{v.name}</div>
@@ -57,11 +56,12 @@ export function VenueCard({ v }: { v: Venue }) {
               <span key={b} className="badge">{b}</span>
             ))}
           </div>
-        </Link>
+        </div>
 
         <button
           onClick={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             setShowCheckInModal(true);
           }}
           className="mt-4 w-full px-3 py-2 bg-gradient-to-r from-brand to-pink-500 hover:from-pink-500 hover:to-brand rounded-lg text-white font-semibold text-sm transition transform hover:scale-105 shadow-lg shadow-brand/30 flex items-center justify-center gap-2"
