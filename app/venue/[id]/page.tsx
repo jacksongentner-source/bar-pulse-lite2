@@ -1,41 +1,32 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { computeAggregates, getVenue, Venue } from "@/lib/data";
+import Link from 'next/link';
+import { computeAggregates, getVenue, venues } from "@/lib/data";
 import { Stars } from "@/components/Stars";
 import { BusyTimesChart } from "@/components/BusyTimesChart";
 import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function VenuePage() {
   const params = useParams();
-  const [venue, setVenue] = useState<Venue | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [venue, setVenue] = useState<any>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     if (params?.id) {
       const id = Array.isArray(params.id) ? params.id[0] : params.id;
-      const foundVenue = getVenue(id);
-      setVenue(foundVenue || null);
-      setLoading(false);
+      const foundVenue = venues.find(v => v.id === id);
+      setVenue(foundVenue);
     }
   }, [params?.id]);
 
-  if (loading) {
-    return (
-      <main className="pb-12">
-        <div className="card p-12 text-center">
-          <p className="text-neutral-400">Loading...</p>
-        </div>
-      </main>
-    );
-  }
-
-  if (!venue) {
+  if (!mounted || !venue) {
     return (
       <main className="pb-12">
         <div className="card p-12 text-center">
           <p className="text-2xl mb-2">🏚️</p>
-          <p className="text-neutral-400 mb-2">Venue not found</p>
+          <p className="text-neutral-400">Loading venue...</p>
         </div>
       </main>
     );
@@ -45,6 +36,11 @@ export default function VenuePage() {
 
   return (
     <main className="pb-12">
+      {/* Back Link */}
+      <Link href="/" className="text-brand hover:text-pink-400 transition text-sm mb-6 inline-block">
+        ← Back to venues
+      </Link>
+
       {/* Header */}
       <div className="card p-8 mb-6">
         <div className="flex items-start justify-between">
