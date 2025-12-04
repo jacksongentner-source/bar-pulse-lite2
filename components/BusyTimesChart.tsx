@@ -1,10 +1,13 @@
 'use client';
 
 import { Venue } from '@/lib/data';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export function BusyTimesChart({ venue }: { venue: Venue }) {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   if (!venue.busyTimes || venue.busyTimes.length === 0) {
     return null;
@@ -19,35 +22,68 @@ export function BusyTimesChart({ venue }: { venue: Venue }) {
   const getCrowdColor = (level: string) => {
     switch (level) {
       case 'dead':
-        return { bg: 'bg-gray-600', glow: 'shadow-gray-600/50', text: 'text-gray-400', bar: 'bg-gradient-to-r from-gray-600 to-gray-500' };
+        return { bg: 'bg-gray-600', glow: 'shadow-gray-600/50', text: 'text-gray-400', bar: 'bg-gradient-to-t from-gray-600 to-gray-500' };
       case 'slow':
-        return { bg: 'bg-blue-500', glow: 'shadow-blue-500/50', text: 'text-blue-400', bar: 'bg-gradient-to-r from-blue-500 to-cyan-400' };
+        return { bg: 'bg-blue-500', glow: 'shadow-blue-500/50', text: 'text-blue-400', bar: 'bg-gradient-to-t from-blue-500 to-cyan-400' };
       case 'moderate':
-        return { bg: 'bg-yellow-500', glow: 'shadow-yellow-500/50', text: 'text-yellow-400', bar: 'bg-gradient-to-r from-yellow-500 to-orange-400' };
+        return { bg: 'bg-yellow-500', glow: 'shadow-yellow-500/50', text: 'text-yellow-400', bar: 'bg-gradient-to-t from-yellow-500 to-orange-400' };
       case 'busy':
-        return { bg: 'bg-orange-500', glow: 'shadow-orange-500/50', text: 'text-orange-400', bar: 'bg-gradient-to-r from-orange-500 to-red-400' };
+        return { bg: 'bg-orange-500', glow: 'shadow-orange-500/50', text: 'text-orange-400', bar: 'bg-gradient-to-t from-orange-500 to-red-400' };
       case 'packed':
-        return { bg: 'bg-red-500', glow: 'shadow-red-500/50', text: 'text-red-400', bar: 'bg-gradient-to-r from-red-500 via-pink-500 to-rose-400' };
+        return { bg: 'bg-red-500', glow: 'shadow-red-500/50', text: 'text-red-400', bar: 'bg-gradient-to-t from-red-500 via-pink-500 to-rose-400' };
       default:
-        return { bg: 'bg-gray-600', glow: 'shadow-gray-600/50', text: 'text-gray-400', bar: 'bg-gradient-to-r from-gray-600 to-gray-500' };
+        return { bg: 'bg-gray-600', glow: 'shadow-gray-600/50', text: 'text-gray-400', bar: 'bg-gradient-to-t from-gray-600 to-gray-500' };
+    }
+  };
+
+  const getCrowdHeight = (level: string) => {
+    switch (level) {
+      case 'dead':
+        return 'h-12';
+      case 'slow':
+        return 'h-20';
+      case 'moderate':
+        return 'h-28';
+      case 'busy':
+        return 'h-36';
+      case 'packed':
+        return 'h-44';
+      default:
+        return 'h-12';
     }
   };
 
   const getCrowdLabel = (level: string) => {
     switch (level) {
       case 'dead':
-        return 'Dead 💤';
+        return '💤';
       case 'slow':
-        return 'Slow 🌙';
+        return '🌙';
       case 'moderate':
-        return 'Moderate 📊';
+        return '📊';
       case 'busy':
-        return 'Busy 🔥';
+        return '🔥';
       case 'packed':
-        return 'Packed 🚀';
+        return '🚀';
       default:
-        return 'Unknown';
+        return '?';
     }
+  };
+
+  // Handle drag
+  const handleMouseDown = () => {
+    setIsDragging(true);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !containerRef.current) return;
+    const newOffset = dragOffset + e.movementX;
+    // Limit drag range
+    setDragOffset(Math.max(-300, Math.min(300, newOffset)));
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
   };
 
   return (
@@ -66,14 +102,22 @@ export function BusyTimesChart({ venue }: { venue: Venue }) {
         }
         @keyframes pulse-glow {
           0%, 100% {
-            box-shadow: inset 0 0 10px currentColor, 0 0 20px currentColor;
+            box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
           }
           50% {
-            box-shadow: inset 0 0 20px currentColor, 0 0 30px currentColor;
+            box-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
           }
         }
         .pulse-bar {
           animation: pulse-glow 2s ease-in-out infinite;
+        }
+        .draggable-container {
+          cursor: grab;
+          user-select: none;
+          transition: transform 0.1s ease-out;
+        }
+        .draggable-container:active {
+          cursor: grabbing;
         }
       `}</style>
 
@@ -84,101 +128,98 @@ export function BusyTimesChart({ venue }: { venue: Venue }) {
             Popular Times
           </span>
         </h3>
-        
-        <div className="space-y-4">
-          {days.map((day) => {
-            const dayData = busyData[day];
-            if (!dayData) return null;
 
-            const colors = getCrowdColor(dayData.crowdLevel);
-            const width = dayData.crowdLevel === 'dead' ? '15%' : 
-                         dayData.crowdLevel === 'slow' ? '35%' :
-                         dayData.crowdLevel === 'moderate' ? '55%' :
-                         dayData.crowdLevel === 'busy' ? '75%' : '100%';
-            
-            const isSelected = selectedDay === day;
+        {/* Horizontal Draggable Chart */}
+        <div 
+          ref={containerRef}
+          className="border border-neutral-700 rounded-lg bg-neutral-900/50 p-6 overflow-hidden"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        >
+          <div
+            className="draggable-container flex items-end justify-center gap-6 h-56 px-4"
+            style={{
+              transform: `translateX(${dragOffset}px)`,
+              minWidth: 'max-content',
+            }}
+          >
+            {days.map((day) => {
+              const dayData = busyData[day];
+              if (!dayData) return null;
 
-            return (
-              <div 
-                key={day} 
-                className="group cursor-pointer"
-                onClick={() => setSelectedDay(isSelected ? null : day)}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className={`text-sm font-medium ${isSelected ? 'text-brand' : 'text-neutral-300'} transition w-20`}>
-                    {day}
-                  </span>
-                  <div className="flex-1 mx-3">
-                    <div className={`h-3 bg-neutral-800 rounded-full overflow-hidden border border-neutral-700 transition ${isSelected ? 'border-brand shadow-lg shadow-brand/50' : 'group-hover:border-brand/50'}`}>
-                      <div
-                        className={`h-full ${colors.bar} rounded-full transition-all duration-500 ${isSelected ? 'pulse-bar' : ''}`}
-                        style={{
-                          width: width,
-                        }}
-                      />
-                    </div>
+              const colors = getCrowdColor(dayData.crowdLevel);
+              const height = getCrowdHeight(dayData.crowdLevel);
+              const isSelected = selectedDay === day;
+
+              return (
+                <div
+                  key={day}
+                  className="flex flex-col items-center gap-2 cursor-pointer group"
+                  onClick={() => setSelectedDay(isSelected ? null : day)}
+                >
+                  {/* Label at top */}
+                  <div className={`text-xs font-semibold transition ${isSelected ? 'text-brand' : 'text-neutral-400 group-hover:text-brand'}`}>
+                    {day.slice(0, 3)}
                   </div>
-                  <div className={`text-xs font-semibold ${colors.text} text-right w-16 transition`}>
+
+                  {/* Bar growing upward */}
+                  <div className="flex flex-col items-center gap-1">
+                    <div
+                      className={`w-12 rounded-t-lg transition-all duration-500 border-2 ${isSelected ? `${colors.glow} border-current pulse-bar` : 'border-transparent'} ${colors.bar}`}
+                      style={{
+                        height: `${height.match(/\d+/)?.[0] || 48}px`,
+                      }}
+                    />
+                  </div>
+
+                  {/* Emoji indicator */}
+                  <div className={`text-lg transition ${isSelected ? 'scale-125' : 'scale-100'}`}>
                     {getCrowdLabel(dayData.crowdLevel)}
                   </div>
-                </div>
-                
-                {/* Expanded Details */}
-                {isSelected && (
-                  <div className={`ml-20 mt-3 p-3 rounded-lg border ${colors.glow} border-transparent bg-gradient-to-r from-neutral-900/50 to-neutral-800/50 shadow-lg ${colors.glow}`}>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-neutral-400">Peak Hours:</span>
-                        <span className={`text-sm font-bold ${colors.text}`}>
-                          {dayData.startTime} - {dayData.endTime}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-neutral-400">Crowd Level:</span>
-                        <span className={`text-sm font-bold capitalize ${colors.text}`}>
-                          {dayData.crowdLevel}
-                        </span>
-                      </div>
-                      <div className="h-1 bg-neutral-700 rounded-full overflow-hidden mt-2">
-                        <div
-                          className={`h-full ${colors.bar}`}
-                          style={{
-                            width: width,
-                          }}
-                        />
-                      </div>
+
+                  {/* Info tooltip on hover/select */}
+                  {isSelected && (
+                    <div className={`mt-2 p-3 rounded-lg text-xs bg-neutral-800 border border-neutral-600 whitespace-nowrap shadow-lg ${colors.glow}`}>
+                      <div className={`font-bold ${colors.text}`}>{dayData.startTime} - {dayData.endTime}</div>
+                      <div className="text-neutral-400 capitalize">{dayData.crowdLevel}</div>
                     </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
+
+        {/* Drag instruction */}
+        <p className="text-xs text-neutral-500 mt-3 text-center">👆 Drag horizontally to scroll</p>
       </div>
+
 
       {/* Legend */}
       <div className="pt-4 border-t border-neutral-700/50">
         <p className="text-xs font-semibold text-neutral-400 mb-3">Crowd Levels:</p>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-wrap gap-4">
           {[
-            { level: 'dead', label: 'Dead 💤', color: getCrowdColor('dead') },
-            { level: 'slow', label: 'Slow 🌙', color: getCrowdColor('slow') },
-            { level: 'moderate', label: 'Moderate 📊', color: getCrowdColor('moderate') },
-            { level: 'busy', label: 'Busy 🔥', color: getCrowdColor('busy') },
-            { level: 'packed', label: 'Packed 🚀', color: getCrowdColor('packed') },
-          ].map(({ level, label, color }) => (
+            { level: 'dead', label: 'Dead', emoji: '💤', color: getCrowdColor('dead') },
+            { level: 'slow', label: 'Slow', emoji: '🌙', color: getCrowdColor('slow') },
+            { level: 'moderate', label: 'Moderate', emoji: '📊', color: getCrowdColor('moderate') },
+            { level: 'busy', label: 'Busy', emoji: '🔥', color: getCrowdColor('busy') },
+            { level: 'packed', label: 'Packed', emoji: '🚀', color: getCrowdColor('packed') },
+          ].map(({ level, label, emoji, color }) => (
             <div key={level} className="flex items-center gap-2">
-              <div className={`w-3 h-3 rounded-full ${color.bg} ${color.glow} shadow-lg`} />
-              <span className="text-xs text-neutral-400">{label}</span>
+              <div className={`w-4 h-12 rounded-sm ${color.bar} shadow-lg`} />
+              <span className="text-xs text-neutral-400">{label} {emoji}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Current Status */}
+      {/* Tip */}
       <div className="mt-4 pt-4 border-t border-neutral-700/50">
         <p className="text-xs font-semibold text-neutral-400 mb-2">💡 Tip:</p>
-        <p className="text-xs text-neutral-500">Click any day to see detailed peak hours and crowd levels. Visit during slower times for a chill vibe, or come packed if you want energy!</p>
+        <p className="text-xs text-neutral-500">Taller bars = busier! Click a day to see exact peak hours. Drag to see all days.</p>
       </div>
     </div>
   );
