@@ -37,3 +37,7 @@ yarn-error.log*
 .idea/
 *.swp
 *.swo
+node_modules/
+.next/
+.env
+.DS_Store
