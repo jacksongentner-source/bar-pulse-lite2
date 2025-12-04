@@ -25,8 +25,8 @@ export function BusyTimesChart({ venue }: { venue: Venue }) {
       if (!busyData[day]) {
         busyData[day] = {
           day,
-          startTime: '20:00',
-          endTime: '22:00',
+          startTime: '8:00PM',
+          endTime: '10:00PM',
           crowdLevel: 'dead'
         };
       }

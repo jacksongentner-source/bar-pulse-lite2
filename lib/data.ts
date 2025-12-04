@@ -32,6 +32,17 @@ export type Venue = {
   amenities?: string[];
 };
 
+// Helper function to convert 24-hour to 12-hour format
+function to12Hour(time: string): string {
+  const [hours, minutes] = time.split(':');
+  let hour = parseInt(hours);
+  const minute = minutes;
+  const period = hour >= 12 ? 'PM' : 'AM';
+  if (hour > 12) hour -= 12;
+  if (hour === 0) hour = 12;
+  return `${hour}:${minute}${period}`;
+}
+
 // Sample Boise data
 export const venues: Venue[] = [
   { 
@@ -45,10 +56,10 @@ export const venues: Venue[] = [
     minAge: 21,
     amenities: ["DJ", "Dance Floor", "Pool Tables", "Mechanical Bull"],
     busyTimes: [
-      { day: "Monday", startTime: "22:00", endTime: "01:00", crowdLevel: "moderate" },
-      { day: "Friday", startTime: "21:00", endTime: "02:00", crowdLevel: "packed" },
-      { day: "Saturday", startTime: "20:00", endTime: "03:00", crowdLevel: "packed" },
-      { day: "Sunday", startTime: "19:00", endTime: "23:00", crowdLevel: "busy" },
+      { day: "Monday", startTime: "10:00PM", endTime: "1:00AM", crowdLevel: "moderate" },
+      { day: "Friday", startTime: "9:00PM", endTime: "2:00AM", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "8:00PM", endTime: "3:00AM", crowdLevel: "packed" },
+      { day: "Sunday", startTime: "7:00PM", endTime: "11:00PM", crowdLevel: "busy" },
     ]
   },
   { 
@@ -62,10 +73,10 @@ export const venues: Venue[] = [
     minAge: 21,
     amenities: ["DJ", "Dance Floor", "Rooftop"],
     busyTimes: [
-      { day: "Wednesday", startTime: "22:00", endTime: "02:00", crowdLevel: "busy" },
-      { day: "Thursday", startTime: "22:00", endTime: "02:00", crowdLevel: "busy" },
-      { day: "Friday", startTime: "21:00", endTime: "03:00", crowdLevel: "packed" },
-      { day: "Saturday", startTime: "21:00", endTime: "03:00", crowdLevel: "packed" },
+      { day: "Wednesday", startTime: "10:00PM", endTime: "2:00AM", crowdLevel: "busy" },
+      { day: "Thursday", startTime: "10:00PM", endTime: "2:00AM", crowdLevel: "busy" },
+      { day: "Friday", startTime: "9:00PM", endTime: "3:00AM", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "9:00PM", endTime: "3:00AM", crowdLevel: "packed" },
     ]
   },
   { 
@@ -79,10 +90,10 @@ export const venues: Venue[] = [
     minAge: 21,
     amenities: ["Pool Tables", "Pull Tabs", "Jukebox"],
     busyTimes: [
-      { day: "Monday", startTime: "17:00", endTime: "22:00", crowdLevel: "moderate" },
-      { day: "Friday", startTime: "17:00", endTime: "01:00", crowdLevel: "busy" },
-      { day: "Saturday", startTime: "18:00", endTime: "02:00", crowdLevel: "busy" },
-      { day: "Sunday", startTime: "16:00", endTime: "23:00", crowdLevel: "moderate" },
+      { day: "Monday", startTime: "5:00PM", endTime: "10:00PM", crowdLevel: "moderate" },
+      { day: "Friday", startTime: "5:00PM", endTime: "1:00AM", crowdLevel: "busy" },
+      { day: "Saturday", startTime: "6:00PM", endTime: "2:00AM", crowdLevel: "busy" },
+      { day: "Sunday", startTime: "4:00PM", endTime: "11:00PM", crowdLevel: "moderate" },
     ]
   },
   { 
@@ -96,10 +107,10 @@ export const venues: Venue[] = [
     minAge: 21,
     amenities: ["Craft Cocktails", "Jukebox"],
     busyTimes: [
-      { day: "Tuesday", startTime: "17:00", endTime: "22:00", crowdLevel: "slow" },
-      { day: "Thursday", startTime: "17:00", endTime: "23:00", crowdLevel: "moderate" },
-      { day: "Friday", startTime: "17:00", endTime: "01:00", crowdLevel: "busy" },
-      { day: "Saturday", startTime: "18:00", endTime: "02:00", crowdLevel: "busy" },
+      { day: "Tuesday", startTime: "5:00PM", endTime: "10:00PM", crowdLevel: "slow" },
+      { day: "Thursday", startTime: "5:00PM", endTime: "11:00PM", crowdLevel: "moderate" },
+      { day: "Friday", startTime: "5:00PM", endTime: "1:00AM", crowdLevel: "busy" },
+      { day: "Saturday", startTime: "6:00PM", endTime: "2:00AM", crowdLevel: "busy" },
     ]
   },
   { 
@@ -113,10 +124,10 @@ export const venues: Venue[] = [
     minAge: 21,
     amenities: ["Mechanical Bull", "DJ", "Dance Floor"],
     busyTimes: [
-      { day: "Wednesday", startTime: "21:00", endTime: "02:00", crowdLevel: "busy" },
-      { day: "Friday", startTime: "20:00", endTime: "02:00", crowdLevel: "packed" },
-      { day: "Saturday", startTime: "19:00", endTime: "03:00", crowdLevel: "packed" },
-      { day: "Sunday", startTime: "18:00", endTime: "23:00", crowdLevel: "moderate" },
+      { day: "Wednesday", startTime: "9:00PM", endTime: "2:00AM", crowdLevel: "busy" },
+      { day: "Friday", startTime: "8:00PM", endTime: "2:00AM", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "7:00PM", endTime: "3:00AM", crowdLevel: "packed" },
+      { day: "Sunday", startTime: "6:00PM", endTime: "11:00PM", crowdLevel: "moderate" },
     ]
   },
   { 
@@ -130,10 +141,10 @@ export const venues: Venue[] = [
     minAge: 21,
     amenities: ["Pool Tables", "Sports Screens", "Jukebox"],
     busyTimes: [
-      { day: "Monday", startTime: "16:00", endTime: "20:00", crowdLevel: "dead" },
-      { day: "Thursday", startTime: "16:00", endTime: "23:00", crowdLevel: "busy" },
-      { day: "Saturday", startTime: "16:00", endTime: "02:00", crowdLevel: "packed" },
-      { day: "Sunday", startTime: "14:00", endTime: "22:00", crowdLevel: "busy" },
+      { day: "Monday", startTime: "4:00PM", endTime: "8:00PM", crowdLevel: "dead" },
+      { day: "Thursday", startTime: "4:00PM", endTime: "11:00PM", crowdLevel: "busy" },
+      { day: "Saturday", startTime: "4:00PM", endTime: "2:00AM", crowdLevel: "packed" },
+      { day: "Sunday", startTime: "2:00PM", endTime: "10:00PM", crowdLevel: "busy" },
     ]
   },
   { 
@@ -147,10 +158,10 @@ export const venues: Venue[] = [
     minAge: 21,
     amenities: ["Pool Tables", "Sports Screens", "Drive Bar"],
     busyTimes: [
-      { day: "Thursday", startTime: "20:00", endTime: "02:00", crowdLevel: "busy" },
-      { day: "Friday", startTime: "19:00", endTime: "02:00", crowdLevel: "packed" },
-      { day: "Saturday", startTime: "19:00", endTime: "03:00", crowdLevel: "packed" },
-      { day: "Sunday", startTime: "17:00", endTime: "23:00", crowdLevel: "moderate" },
+      { day: "Thursday", startTime: "8:00PM", endTime: "2:00AM", crowdLevel: "busy" },
+      { day: "Friday", startTime: "7:00PM", endTime: "2:00AM", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "7:00PM", endTime: "3:00AM", crowdLevel: "packed" },
+      { day: "Sunday", startTime: "5:00PM", endTime: "11:00PM", crowdLevel: "moderate" },
     ]
   },
   { 
@@ -164,10 +175,10 @@ export const venues: Venue[] = [
     minAge: 25,
     amenities: ["Craft Cocktails", "Pool Tables"],
     busyTimes: [
-      { day: "Wednesday", startTime: "18:00", endTime: "23:00", crowdLevel: "moderate" },
-      { day: "Thursday", startTime: "18:00", endTime: "02:00", crowdLevel: "busy" },
-      { day: "Friday", startTime: "17:00", endTime: "02:00", crowdLevel: "packed" },
-      { day: "Saturday", startTime: "17:00", endTime: "03:00", crowdLevel: "packed" },
+      { day: "Wednesday", startTime: "6:00PM", endTime: "11:00PM", crowdLevel: "moderate" },
+      { day: "Thursday", startTime: "6:00PM", endTime: "2:00AM", crowdLevel: "busy" },
+      { day: "Friday", startTime: "5:00PM", endTime: "2:00AM", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "5:00PM", endTime: "3:00AM", crowdLevel: "packed" },
     ]
   },
   { 
@@ -181,10 +192,10 @@ export const venues: Venue[] = [
     minAge: 21,
     amenities: ["DJ", "Dance Floor", "Live Music", "Multiple Rooms"],
     busyTimes: [
-      { day: "Thursday", startTime: "21:00", endTime: "02:00", crowdLevel: "busy" },
-      { day: "Friday", startTime: "20:00", endTime: "03:00", crowdLevel: "packed" },
-      { day: "Saturday", startTime: "20:00", endTime: "03:00", crowdLevel: "packed" },
-      { day: "Sunday", startTime: "19:00", endTime: "23:00", crowdLevel: "moderate" },
+      { day: "Thursday", startTime: "9:00PM", endTime: "2:00AM", crowdLevel: "busy" },
+      { day: "Friday", startTime: "8:00PM", endTime: "3:00AM", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "8:00PM", endTime: "3:00AM", crowdLevel: "packed" },
+      { day: "Sunday", startTime: "7:00PM", endTime: "11:00PM", crowdLevel: "moderate" },
     ]
   },
   { 
@@ -198,10 +209,10 @@ export const venues: Venue[] = [
     minAge: 21,
     amenities: ["Pool Tables", "Sports Screens", "Jukebox"],
     busyTimes: [
-      { day: "Monday", startTime: "16:00", endTime: "22:00", crowdLevel: "moderate" },
-      { day: "Thursday", startTime: "16:00", endTime: "02:00", crowdLevel: "busy" },
-      { day: "Friday", startTime: "15:00", endTime: "02:00", crowdLevel: "packed" },
-      { day: "Saturday", startTime: "15:00", endTime: "03:00", crowdLevel: "packed" },
+      { day: "Monday", startTime: "4:00PM", endTime: "10:00PM", crowdLevel: "moderate" },
+      { day: "Thursday", startTime: "4:00PM", endTime: "2:00AM", crowdLevel: "busy" },
+      { day: "Friday", startTime: "3:00PM", endTime: "2:00AM", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "3:00PM", endTime: "3:00AM", crowdLevel: "packed" },
     ]
   },
 ];
