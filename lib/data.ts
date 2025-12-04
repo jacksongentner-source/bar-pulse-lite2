@@ -12,6 +12,13 @@ export type Rating = {
   createdAt: string;
 };
 
+export type BusyTime = {
+  day: string;
+  startTime: string;
+  endTime: string;
+  crowdLevel: "dead" | "slow" | "moderate" | "busy" | "packed";
+};
+
 export type Venue = {
   id: string;
   name: string;
@@ -20,20 +27,172 @@ export type Venue = {
   state: string;
   lat?: number;
   lng?: number;
+  minAge?: number;
+  busyTimes?: BusyTime[];
 };
 
 // Sample Boise data
 export const venues: Venue[] = [
-  { id: "hannahs", name: "Humpin' Hannah's", type: "BAR", city: "Boise", state: "ID", lat: 43.6154, lng: -116.2039 },
-  { id: "balcony", name: "The Balcony Club", type: "CLUB", city: "Boise", state: "ID", lat: 43.6165, lng: -116.2030 },
-  { id: "pengillys", name: "Pengilly's Saloon", type: "BAR", city: "Boise", state: "ID", lat: 43.6140, lng: -116.2035 },
-  { id: "presspony", name: "Press & Pony", type: "BAR", city: "Boise", state: "ID", lat: 43.6155, lng: -116.2045 },
-  { id: "dirtylittleroddys", name: "Dirty Little Roddy's", type: "BAR", city: "Boise", state: "ID", lat: 43.6170, lng: -116.2015 },
-  { id: "sudstavern", name: "Suds Tavern", type: "BAR", city: "Boise", state: "ID", lat: 43.6142, lng: -116.2028 },
-  { id: "mulligans", name: "Mulligans", type: "BAR", city: "Boise", state: "ID", lat: 43.6148, lng: -116.2040 },
-  { id: "thieves", name: "Thick As Thieves", type: "BAR", city: "Boise", state: "ID", lat: 43.6160, lng: -116.2020 },
-  { id: "tomgraineys", name: "Tom Grainey's", type: "CLUB", city: "Boise", state: "ID", lat: 43.6158, lng: -116.2032 },
-  { id: "theshed", name: "The Shed", type: "BAR", city: "Boise", state: "ID", lat: 43.6145, lng: -116.2025 },
+  { 
+    id: "hannahs", 
+    name: "Humpin' Hannah's", 
+    type: "BAR", 
+    city: "Boise", 
+    state: "ID", 
+    lat: 43.6154, 
+    lng: -116.2039,
+    minAge: 21,
+    busyTimes: [
+      { day: "Monday", startTime: "22:00", endTime: "01:00", crowdLevel: "moderate" },
+      { day: "Friday", startTime: "21:00", endTime: "02:00", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "20:00", endTime: "03:00", crowdLevel: "packed" },
+      { day: "Sunday", startTime: "19:00", endTime: "23:00", crowdLevel: "busy" },
+    ]
+  },
+  { 
+    id: "balcony", 
+    name: "The Balcony Club", 
+    type: "CLUB", 
+    city: "Boise", 
+    state: "ID", 
+    lat: 43.6165, 
+    lng: -116.2030,
+    minAge: 21,
+    busyTimes: [
+      { day: "Wednesday", startTime: "22:00", endTime: "02:00", crowdLevel: "busy" },
+      { day: "Thursday", startTime: "22:00", endTime: "02:00", crowdLevel: "busy" },
+      { day: "Friday", startTime: "21:00", endTime: "03:00", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "21:00", endTime: "03:00", crowdLevel: "packed" },
+    ]
+  },
+  { 
+    id: "pengillys", 
+    name: "Pengilly's Saloon", 
+    type: "BAR", 
+    city: "Boise", 
+    state: "ID", 
+    lat: 43.6140, 
+    lng: -116.2035,
+    minAge: 21,
+    busyTimes: [
+      { day: "Monday", startTime: "17:00", endTime: "22:00", crowdLevel: "moderate" },
+      { day: "Friday", startTime: "17:00", endTime: "01:00", crowdLevel: "busy" },
+      { day: "Saturday", startTime: "18:00", endTime: "02:00", crowdLevel: "busy" },
+      { day: "Sunday", startTime: "16:00", endTime: "23:00", crowdLevel: "moderate" },
+    ]
+  },
+  { 
+    id: "presspony", 
+    name: "Press & Pony", 
+    type: "BAR", 
+    city: "Boise", 
+    state: "ID", 
+    lat: 43.6155, 
+    lng: -116.2045,
+    minAge: 21,
+    busyTimes: [
+      { day: "Tuesday", startTime: "17:00", endTime: "22:00", crowdLevel: "slow" },
+      { day: "Thursday", startTime: "17:00", endTime: "23:00", crowdLevel: "moderate" },
+      { day: "Friday", startTime: "17:00", endTime: "01:00", crowdLevel: "busy" },
+      { day: "Saturday", startTime: "18:00", endTime: "02:00", crowdLevel: "busy" },
+    ]
+  },
+  { 
+    id: "dirtylittleroddys", 
+    name: "Dirty Little Roddy's", 
+    type: "BAR", 
+    city: "Boise", 
+    state: "ID", 
+    lat: 43.6170, 
+    lng: -116.2015,
+    minAge: 21,
+    busyTimes: [
+      { day: "Wednesday", startTime: "21:00", endTime: "02:00", crowdLevel: "busy" },
+      { day: "Friday", startTime: "20:00", endTime: "02:00", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "19:00", endTime: "03:00", crowdLevel: "packed" },
+      { day: "Sunday", startTime: "18:00", endTime: "23:00", crowdLevel: "moderate" },
+    ]
+  },
+  { 
+    id: "sudstavern", 
+    name: "Suds Tavern", 
+    type: "BAR", 
+    city: "Boise", 
+    state: "ID", 
+    lat: 43.6142, 
+    lng: -116.2028,
+    minAge: 21,
+    busyTimes: [
+      { day: "Monday", startTime: "16:00", endTime: "20:00", crowdLevel: "dead" },
+      { day: "Thursday", startTime: "16:00", endTime: "23:00", crowdLevel: "busy" },
+      { day: "Saturday", startTime: "16:00", endTime: "02:00", crowdLevel: "packed" },
+      { day: "Sunday", startTime: "14:00", endTime: "22:00", crowdLevel: "busy" },
+    ]
+  },
+  { 
+    id: "mulligans", 
+    name: "Mulligans", 
+    type: "BAR", 
+    city: "Boise", 
+    state: "ID", 
+    lat: 43.6148, 
+    lng: -116.2040,
+    minAge: 21,
+    busyTimes: [
+      { day: "Thursday", startTime: "20:00", endTime: "02:00", crowdLevel: "busy" },
+      { day: "Friday", startTime: "19:00", endTime: "02:00", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "19:00", endTime: "03:00", crowdLevel: "packed" },
+      { day: "Sunday", startTime: "17:00", endTime: "23:00", crowdLevel: "moderate" },
+    ]
+  },
+  { 
+    id: "thieves", 
+    name: "Thick As Thieves", 
+    type: "BAR", 
+    city: "Boise", 
+    state: "ID", 
+    lat: 43.6160, 
+    lng: -116.2020,
+    minAge: 25,
+    busyTimes: [
+      { day: "Wednesday", startTime: "18:00", endTime: "23:00", crowdLevel: "moderate" },
+      { day: "Thursday", startTime: "18:00", endTime: "02:00", crowdLevel: "busy" },
+      { day: "Friday", startTime: "17:00", endTime: "02:00", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "17:00", endTime: "03:00", crowdLevel: "packed" },
+    ]
+  },
+  { 
+    id: "tomgraineys", 
+    name: "Tom Grainey's", 
+    type: "CLUB", 
+    city: "Boise", 
+    state: "ID", 
+    lat: 43.6158, 
+    lng: -116.2032,
+    minAge: 21,
+    busyTimes: [
+      { day: "Thursday", startTime: "21:00", endTime: "02:00", crowdLevel: "busy" },
+      { day: "Friday", startTime: "20:00", endTime: "03:00", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "20:00", endTime: "03:00", crowdLevel: "packed" },
+      { day: "Sunday", startTime: "19:00", endTime: "23:00", crowdLevel: "moderate" },
+    ]
+  },
+  { 
+    id: "theshed", 
+    name: "The Shed", 
+    type: "BAR", 
+    city: "Boise", 
+    state: "ID", 
+    lat: 43.6145, 
+    lng: -116.2025,
+    minAge: 21,
+    busyTimes: [
+      { day: "Monday", startTime: "16:00", endTime: "22:00", crowdLevel: "moderate" },
+      { day: "Thursday", startTime: "16:00", endTime: "02:00", crowdLevel: "busy" },
+      { day: "Friday", startTime: "15:00", endTime: "02:00", crowdLevel: "packed" },
+      { day: "Saturday", startTime: "15:00", endTime: "03:00", crowdLevel: "packed" },
+    ]
+  },
 ];
 
 export const ratings = [

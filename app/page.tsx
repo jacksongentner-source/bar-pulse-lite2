@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { listVenues } from "@/lib/data";
+import { listVenues, venues as allVenues } from "@/lib/data";
 import { VenueCard } from "@/components/VenueCard";
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('popular');
+  const [minAge, setMinAge] = useState('');
 
   const venues = listVenues();
 
@@ -20,12 +21,27 @@ export default function HomePage() {
     { id: 'jazz', label: 'Live Music' },
   ];
 
+  const ageOptions = [
+    { value: '', label: 'Any Age' },
+    { value: '18', label: '18+' },
+    { value: '21', label: '21+' },
+    { value: '25', label: '25+' },
+  ];
+
+  // Get venue details for age checking
+  const venueMap = new Map(allVenues.map(v => [v.id, v]));
+
   const filteredVenues = venues.filter((venue: any) => {
     const matchesSearch = venue.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       venue.type.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || 
       venue.type.toLowerCase().includes(selectedCategory.toLowerCase());
-    return matchesSearch && matchesCategory;
+    
+    // Check age requirement
+    const venueDetails = venueMap.get(venue.id);
+    const matchesAge = !minAge || (venueDetails?.minAge ? venueDetails.minAge <= parseInt(minAge) : true);
+    
+    return matchesSearch && matchesCategory && matchesAge;
   });
 
   return (
@@ -53,23 +69,44 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Category Filter */}
-        <div>
-          <label className="block text-sm font-medium mb-3 text-neutral-300">Filter by Category</label>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-full font-medium transition ${
-                  selectedCategory === category.id
-                    ? 'bg-brand text-white shadow-lg shadow-brand/50'
-                    : 'bg-neutral-900 text-neutral-300 border border-neutral-700 hover:border-brand'
-                }`}
-              >
-                {category.label}
-              </button>
-            ))}
+        {/* Category & Age Filters */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium mb-3 text-neutral-300">Filter by Category</label>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`px-4 py-2 rounded-full font-medium transition ${
+                    selectedCategory === category.id
+                      ? 'bg-brand text-white shadow-lg shadow-brand/50'
+                      : 'bg-neutral-900 text-neutral-300 border border-neutral-700 hover:border-brand'
+                  }`}
+                >
+                  {category.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-3 text-neutral-300">Age Requirement</label>
+            <div className="flex flex-wrap gap-2">
+              {ageOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setMinAge(option.value)}
+                  className={`px-4 py-2 rounded-full font-medium transition ${
+                    minAge === option.value
+                      ? 'bg-pink-500 text-white shadow-lg shadow-pink-500/50'
+                      : 'bg-neutral-900 text-neutral-300 border border-neutral-700 hover:border-pink-500'
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -94,12 +131,15 @@ export default function HomePage() {
         <h3 className="text-xl font-semibold">
           {filteredVenues.length} venue{filteredVenues.length !== 1 ? 's' : ''} found
         </h3>
-        {searchQuery && (
+        {(searchQuery || minAge) && (
           <button
-            onClick={() => setSearchQuery('')}
+            onClick={() => {
+              setSearchQuery('');
+              setMinAge('');
+            }}
             className="text-sm text-brand hover:text-pink-400 transition"
           >
-            Clear search
+            Clear filters
           </button>
         )}
       </div>
