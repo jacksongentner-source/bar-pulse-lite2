@@ -47,6 +47,9 @@ export default function VenuePage() {
           <div>
             <h2 className="text-4xl font-bold mb-2">{venue.name}</h2>
             <p className="text-sm text-neutral-400">{venue.type} • {venue.city}, {venue.state}</p>
+            {venue.description && (
+              <p className="text-sm text-neutral-300 mt-3 max-w-2xl">{venue.description}</p>
+            )}
           </div>
           {agg && (
             <div className="text-right">

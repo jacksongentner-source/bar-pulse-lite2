@@ -28,6 +28,7 @@ export type Venue = {
   lat?: number;
   lng?: number;
   minAge?: number;
+  description?: string;
   busyTimes?: BusyTime[];
   amenities?: string[];
 };
@@ -54,6 +55,7 @@ export const venues: Venue[] = [
     lat: 43.6154, 
     lng: -116.2039,
     minAge: 21,
+    description: "Wild country vibes with live DJ energy. Mechanical bull, dance floor, and high-energy crowd. Known for insane bachelor/bachelorette parties and live entertainment.",
     amenities: ["DJ", "Dance Floor", "Pool Tables", "Mechanical Bull"],
     busyTimes: [
       { day: "Monday", startTime: "10:00PM", endTime: "1:00AM", crowdLevel: "moderate" },
@@ -71,6 +73,7 @@ export const venues: Venue[] = [
     lat: 43.6165, 
     lng: -116.2030,
     minAge: 21,
+    description: "LGBTQ-friendly rooftop club with amazing music and younger crowd. Great views, stellar DJ, and an accepting atmosphere. Perfect for a night of dancing and vibing.",
     amenities: ["DJ", "Dance Floor", "Rooftop"],
     busyTimes: [
       { day: "Wednesday", startTime: "10:00PM", endTime: "2:00AM", crowdLevel: "busy" },
@@ -88,6 +91,7 @@ export const venues: Venue[] = [
     lat: 43.6140, 
     lng: -116.2035,
     minAge: 21,
+    description: "Classic dive bar with old-school charm. Pool tables, jukebox, and a mix of regulars and newcomers. Laid-back atmosphere perfect for casual drinks and games.",
     amenities: ["Pool Tables", "Pull Tabs", "Jukebox"],
     busyTimes: [
       { day: "Monday", startTime: "5:00PM", endTime: "10:00PM", crowdLevel: "moderate" },
@@ -105,6 +109,7 @@ export const venues: Venue[] = [
     lat: 43.6155, 
     lng: -116.2045,
     minAge: 21,
+    description: "Craft cocktail paradise in downtown. Mixologists know their craft, elegant vibe, and quality drinks. Great for date nights or sophisticated evening out.",
     amenities: ["Craft Cocktails", "Jukebox"],
     busyTimes: [
       { day: "Tuesday", startTime: "5:00PM", endTime: "10:00PM", crowdLevel: "slow" },
@@ -122,6 +127,7 @@ export const venues: Venue[] = [
     lat: 43.6170, 
     lng: -116.2015,
     minAge: 21,
+    description: "Country and western at its wildest. Mechanical bull action, dancin' til dawn, and a raucous good time. Serious nightlife energy with top-tier entertainment.",
     amenities: ["Mechanical Bull", "DJ", "Dance Floor"],
     busyTimes: [
       { day: "Wednesday", startTime: "9:00PM", endTime: "2:00AM", crowdLevel: "busy" },
@@ -139,6 +145,7 @@ export const venues: Venue[] = [
     lat: 43.6142, 
     lng: -116.2028,
     minAge: 21,
+    description: "Sports bar central. Multiple screens, game day madness, and a crowd that lives for the plays. Perfect spot for watching your team with fellow fans.",
     amenities: ["Pool Tables", "Sports Screens", "Jukebox"],
     busyTimes: [
       { day: "Monday", startTime: "4:00PM", endTime: "8:00PM", crowdLevel: "dead" },
@@ -156,6 +163,7 @@ export const venues: Venue[] = [
     lat: 43.6148, 
     lng: -116.2040,
     minAge: 21,
+    description: "Pregame headquarters with drive-through style vibe. Pool, screens, and a rotating crowd. Great for getting the night started before heading elsewhere.",
     amenities: ["Pool Tables", "Sports Screens", "Drive Bar"],
     busyTimes: [
       { day: "Thursday", startTime: "8:00PM", endTime: "2:00AM", crowdLevel: "busy" },
@@ -173,6 +181,7 @@ export const venues: Venue[] = [
     lat: 43.6160, 
     lng: -116.2020,
     minAge: 25,
+    description: "Upscale downtown gem for the mature crowd. Craft cocktails, sophisticated vibe, and refined tastes. 25+ required—for those seeking a classier scene.",
     amenities: ["Craft Cocktails", "Pool Tables"],
     busyTimes: [
       { day: "Wednesday", startTime: "6:00PM", endTime: "11:00PM", crowdLevel: "moderate" },
@@ -190,6 +199,7 @@ export const venues: Venue[] = [
     lat: 43.6158, 
     lng: -116.2032,
     minAge: 21,
+    description: "Main Street legend with multiple rooms and serious DJ energy. Top-tier dance floor, live music events, and packed dance halls. The place to be on weekends.",
     amenities: ["DJ", "Dance Floor", "Live Music", "Multiple Rooms"],
     busyTimes: [
       { day: "Thursday", startTime: "9:00PM", endTime: "2:00AM", crowdLevel: "busy" },
@@ -207,6 +217,7 @@ export const venues: Venue[] = [
     lat: 43.6145, 
     lng: -116.2025,
     minAge: 21,
+    description: "College crowd favorite with pool, screens, and no-frills fun. Casual vibe, affordable drinks, and always packed when games are on. Student paradise.",
     amenities: ["Pool Tables", "Sports Screens", "Jukebox"],
     busyTimes: [
       { day: "Monday", startTime: "4:00PM", endTime: "10:00PM", crowdLevel: "moderate" },
@@ -261,6 +272,7 @@ export function listVenues() {
       type: v.type,
       city: v.city,
       state: v.state,
+      description: v.description,
       avg: { vibe: agg?.avg.vibe ?? 0 },
       badges: agg?.badges ?? [],
     }

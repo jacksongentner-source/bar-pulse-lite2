@@ -13,6 +13,7 @@ type Venue = {
   state: string;
   avg: { vibe: number };
   badges: string[];
+  description?: string;
 };
 
 export function VenueCard({ v }: { v: Venue }) {
@@ -52,6 +53,9 @@ export function VenueCard({ v }: { v: Venue }) {
               <Stars value={v.avg.vibe} />
             </div>
           </div>
+          {v.description && (
+            <p className="text-xs text-neutral-500 mt-2 line-clamp-2">{v.description}</p>
+          )}
           <div className="mt-3 flex gap-2 flex-wrap">
             {v.badges.map((b) => (
               <span key={b} className="badge">{b}</span>
