@@ -12,12 +12,14 @@ interface User {
 interface CheckIn {
   id: string;
   userId: string;
+  userInfo?: { name: string; username: string };
   venueId: string;
   venueName: string;
   venueType: string;
   timestamp: string;
   caption?: string;
   emoji?: string;
+  photoData?: string; // Base64 encoded image
 }
 
 interface AuthContextType {
@@ -28,7 +30,7 @@ interface AuthContextType {
   signUp: (name: string, email: string, username: string, password: string) => Promise<string | null>;
   signIn: (email: string, password: string) => Promise<string | null>;
   signOut: () => void;
-  addCheckIn: (venueId: string, venueName: string, venueType: string, caption?: string, emoji?: string) => void;
+  addCheckIn: (venueId: string, venueName: string, venueType: string, caption?: string, emoji?: string, photoData?: string) => void;
   getCheckInsByUser: (userId: string) => CheckIn[];
 }
 
@@ -124,18 +126,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsSignedIn(false);
   };
 
-  const addCheckIn = (venueId: string, venueName: string, venueType: string, caption?: string, emoji?: string) => {
+  const addCheckIn = (venueId: string, venueName: string, venueType: string, caption?: string, emoji?: string, photoData?: string) => {
     if (!user) return;
     
     const newCheckIn: CheckIn = {
       id: Date.now().toString(),
       userId: user.id,
+      userInfo: { name: user.name, username: user.username },
       venueId,
       venueName,
       venueType,
       timestamp: new Date().toISOString(),
       caption,
       emoji,
+      photoData,
     };
 
     const updatedCheckIns = [newCheckIn, ...checkIns];

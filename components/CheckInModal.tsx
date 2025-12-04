@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from '@/lib/auth-context';
 
 interface CheckInModalProps {
@@ -18,8 +18,22 @@ export function CheckInModal({ venueId, venueName, venueType, isOpen, onClose, o
   const [selectedEmoji, setSelectedEmoji] = useState('🎉');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const emojis = ['🎉', '🍻', '🔥', '🌙', '⭐', '💜', '🎶', '✨', '🎊', '🥂'];
+
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target?.result as string;
+        setPhotoPreview(base64);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -28,13 +42,14 @@ export function CheckInModal({ venueId, venueName, venueType, isOpen, onClose, o
     // Simulate processing
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    addCheckIn(venueId, venueName, venueType, caption, selectedEmoji);
+    addCheckIn(venueId, venueName, venueType, caption, selectedEmoji, photoPreview || undefined);
 
     // Show celebration animation
     setTimeout(() => {
       setIsSubmitting(false);
       setCaption('');
       setSelectedEmoji('🎉');
+      setPhotoPreview(null);
       onClose();
       onSuccess?.();
     }, 1500);
@@ -96,6 +111,37 @@ export function CheckInModal({ venueId, venueName, venueType, isOpen, onClose, o
               <p className="text-neutral-400 text-sm">{venueType}</p>
             </div>
 
+            {/* Photo Upload */}
+            <div className="mb-6">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoSelect}
+                className="hidden"
+              />
+              
+              {photoPreview ? (
+                <div className="relative mb-4 rounded-lg overflow-hidden border-2 border-brand">
+                  <img src={photoPreview} alt="Check-in photo" className="w-full h-48 object-cover" />
+                  <button
+                    onClick={() => setPhotoPreview(null)}
+                    className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : null}
+              
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full px-4 py-3 bg-neutral-900 border-2 border-dashed border-brand hover:border-pink-400 rounded-lg text-white transition flex items-center justify-center gap-2"
+              >
+                <span className="text-xl">📷</span>
+                <span>{photoPreview ? 'Change Photo' : 'Add a Photo'}</span>
+              </button>
+            </div>
+
             {/* Emoji Selector */}
             <div className="mb-6">
               <p className="text-sm font-semibold text-neutral-300 mb-3">Choose your vibe:</p>
@@ -151,7 +197,8 @@ export function CheckInModal({ venueId, venueName, venueType, isOpen, onClose, o
           <div className="text-center py-12">
             <div className="text-6xl mb-4 animate-bounce">{selectedEmoji}</div>
             <h4 className="text-xl font-bold text-brand mb-2">Checked In!</h4>
-            <p className="text-neutral-400">You're now at {venueName}</p>
+            <p className="text-neutral-400 mb-3">You're now at {venueName}</p>
+            <p className="text-sm text-neutral-500">Shared with your friends! 🎉</p>
           </div>
         )}
       </div>
