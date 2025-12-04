@@ -24,6 +24,8 @@ export function Navigation() {
 
   return (
     <nav className="flex items-center gap-4 text-xl font-bold">
+      <a href="/" className="text-white hover:text-brand transition glow-text">Explore</a>
+      <div className="w-2 h-2 bg-black rounded-full shadow-lg"></div>
       {isSignedIn ? (
         <>
           <a href="/dashboard" className="text-white hover:text-brand transition glow-text">My Profile</a>
@@ -40,11 +42,7 @@ export function Navigation() {
           </button>
         </>
       ) : (
-        <>
-          <a href="/" className="text-white hover:text-brand transition glow-text">Explore</a>
-          <div className="w-2 h-2 bg-black rounded-full shadow-lg"></div>
-          <a href="/auth" className="text-white hover:text-brand transition glow-text">Sign In</a>
-        </>
+        <a href="/auth" className="text-white hover:text-brand transition glow-text">Sign In</a>
       )}
     </nav>
   );
